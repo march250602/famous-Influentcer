@@ -79,15 +79,26 @@ export default function RateCard() {
       <div className="relative z-10 container mx-auto px-4 py-6 max-w-6xl">
         {/* Header */}
         <header className="text-center mb-6">
+         {/* Logo */}
+         <div className="flex justify-center mb-4">
+            <div className="relative">
+              <div className="absolute inset-0 bg-blue-100 rounded-full blur-xl opacity-30 animate-pulse"></div>
+              <div className="relative w-44 h-44 rounded-full overflow-hidden shadow-lg border-4 border-white transform hover:scale-110 transition-transform">
+                <img 
+                  src="https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/d6d4622f5a23c0172467f388b42f8bab~tplv-tiktokx-cropcenter:1080:1080.jpeg?dr=14579&refresh_token=b5dc66bd&x-expires=1762660800&x-signature=iQcLlasy9L%2F%2F9NTgdKmRu0jv8ok%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=my" 
+                  alt="DUKDIK Logo" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+          </div>
           <div className="inline-flex items-center gap-2 bg-blue-800 text-white px-6 py-2 rounded-full shadow-md mb-4 transform hover:scale-105 transition-transform">
             <span className="font-semibold text-sm tracking-wide">DUKDIKดุ๊กดิ๊ก</span>
           </div>
+      
           <h1 className="text-5xl md:text-6xl font-bold text-blue-900 mb-2">
             Rate Card
           </h1>
-          <div className="flex items-center justify-center gap-1">
-            
-          </div>
         </header>
 
         {/* Packages Grid */}
@@ -129,21 +140,9 @@ export default function RateCard() {
 
         {/* Footer with Social Links */}
         <footer className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-          <div className="flex flex-col md:flex-row items-center gap-6">
-            {/* Logo */}
-            <div className="flex-shrink-0 relative">
-              <div className="absolute inset-0 bg-blue-100 rounded-full blur-xl opacity-30 animate-pulse"></div>
-              <div className="relative w-32 h-32 rounded-full overflow-hidden shadow-lg border-4 border-white transform hover:scale-110 transition-transform">
-                <img 
-                  src="https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/d6d4622f5a23c0172467f388b42f8bab~tplv-tiktokx-cropcenter:1080:1080.jpeg?dr=14579&refresh_token=b5dc66bd&x-expires=1762660800&x-signature=iQcLlasy9L%2F%2F9NTgdKmRu0jv8ok%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=my" 
-                  alt="DUKDIK Logo" 
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </div>
-
+          <div className="flex flex-col items-center gap-4">
             {/* Social Links */}
-            <div className="flex-1 w-full space-y-3">
+            <div className="w-full space-y-3">
               {socialLinks.map((social, index) => (
                 <a
                   key={index}
