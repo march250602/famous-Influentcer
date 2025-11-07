@@ -72,9 +72,9 @@ export default function RateCard() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-slate-50 relative overflow-hidden">
       {/* Professional decorative elements */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-slate-100 rounded-full mix-blend-multiply filter blur-3xl opacity-25 animate-pulse delay-1000"></div>
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-50 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+      <div className="absolute top-0 right-0 w-64 h-64 md:w-96 md:h-96 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 md:opacity-30 animate-pulse"></div>
+      <div className="absolute bottom-0 left-0 w-64 h-64 md:w-96 md:h-96 bg-slate-100 rounded-full mix-blend-multiply filter blur-3xl opacity-15 md:opacity-25 animate-pulse delay-1000"></div>
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 md:w-96 md:h-96 bg-indigo-50 rounded-full mix-blend-multiply filter blur-3xl opacity-10 md:opacity-20"></div>
 
       <div className="relative z-10 container mx-auto px-4 py-6 max-w-6xl">
         {/* Header */}
