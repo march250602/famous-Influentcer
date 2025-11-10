@@ -14,7 +14,7 @@ export async function GET() {
     // ดึงข้อมูลจาก YouTube API
     try {
       const youtubeApiKey = process.env.YOUTUBE_API_KEY;
-      const youtubeChannelId = process.env.YOUTUBE_CHANNEL_ID || 'UCXjWTLmy0D0rmZc6WXBB3fg';
+      const youtubeChannelId = process.env.YOUTUBE_CHANNEL_ID;
     
 // Tiktok API
       const tiktokResponse = await fetch(

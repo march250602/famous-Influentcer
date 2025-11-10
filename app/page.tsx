@@ -3,13 +3,15 @@
 import { useEffect, useState } from "react";
 import { Sparkles } from 'lucide-react';
 import { useAppSelector } from '@/lib/hooks';
-
+import axios from "axios";
 export default function RateCard() {
   const { data, loading, error } = useAppSelector((state) => state.followers);
   const [packages, setPackages] = useState<Package[]>([]);
   const [packagesLoading, setPackagesLoading] = useState(true);
   const [packagesError, setPackagesError] = useState<string | null>(null);
- 
+  const [Facebook, setFacebook] = useState<SocialMedia | null>(null);
+  const [Tiktok, setTiktok] = useState<SocialMedia | null>(null);
+  const [Youtube, setYoutube] = useState<SocialMedia | null>(null);
   type Package = {
     id: string;
     title: string;
@@ -17,6 +19,12 @@ export default function RateCard() {
     price: number;
     icon: string;
   };
+  interface SocialMedia {
+    id: string;
+    social_media: string;
+    chanel_name: string;
+    link: string;
+  }
 
   useEffect(() => {
     setPackagesLoading(true);
@@ -89,29 +97,47 @@ export default function RateCard() {
     return `${count}`;
   };
 
+
+  useEffect(() => {
+    fetch("/api/social_media")
+      .then(res => res.json())
+      .then(data => {
+        setFacebook(data[0])
+        setTiktok(data[1])
+        setYoutube(data[2])
+        })
+       
+     
+      
+  }, []);
   // สร้าง socialLinks จาก Redux store
   const getSocialLinks = () => {
+    
     const links = [
       {
         platform: 'facebook' as const,
-        label: data.facebook 
-          ? `${data.facebook.label}(${formatFollowerCount(data.facebook.count)}ผู้ติดตาม)`
+        label: Facebook?.chanel_name && data.facebook?.count
+          ? `${Facebook.chanel_name}(${formatFollowerCount(data.facebook.count)}ผู้ติดตาม)`
           : 'DUKDIK_ดุ๊กดิ๊ก(กำลังโหลด...)',
-        color: 'from-blue-500 to-blue-600'
+        color: 'from-blue-500 to-blue-600',
+        link: Facebook?.link
       },
       {
         platform: 'tiktok' as const,
-        label: data.tiktok
-          ? `${data.tiktok.label}(${formatFollowerCount(data.tiktok.count)}ผู้ติดตาม)`
+        label: Tiktok?.chanel_name && data.tiktok?.count
+          ? `${Tiktok.chanel_name}(${formatFollowerCount(data.tiktok.count)}ผู้ติดตาม)`
           : 'REAL_DUKDIK(กำลังโหลด...)',
-        color: 'from-gray-800 to-black'
+        color: 'from-gray-800 to-black',
+         link: Tiktok?.link
       },
       {
         platform: 'youtube' as const,
-        label: data.youtube
-          ? `${data.youtube.label}(${formatFollowerCount(data.youtube.count)}ผู้ติดตาม)`
+        label: Youtube?.chanel_name && data.youtube?.count
+          ? `${Youtube.chanel_name}(${formatFollowerCount(data.youtube.count)}ผู้ติดตาม)`
           : 'DUKDIK_ดุ๊กดิ๊ก(กำลังโหลด...)',
-        color: 'from-red-500 to-red-600'
+        color: 'from-red-500 to-red-600',
+        link: Youtube?.link
+
       }
     ];
     return links;
@@ -255,7 +281,9 @@ export default function RateCard() {
               {socialLinks.map((social, index) => (
                 <a
                   key={index}
-                  href="#"
+                  href={social.link}
+                  target="_blank" 
+                  rel="noopener noreferrer"
                   className={`flex items-center gap-3 bg-gradient-to-r ${social.color} text-white px-5 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 group`}
                 >
                   <div className="flex-shrink-0 w-8 h-8 bg-white rounded-full flex items-center justify-center group-hover:rotate-12 transition-transform">
