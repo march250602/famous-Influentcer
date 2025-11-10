@@ -1,30 +1,38 @@
-import React from 'react';
-import { Sparkles, Star } from 'lucide-react';
+'use client';
+
+import { useEffect, useState } from "react";
+import { Sparkles } from 'lucide-react';
+import { useAppSelector } from '@/lib/hooks';
 
 export default function RateCard() {
-  const packages = [
-    {
-      id: 1,
-      title: 'โพสต์, รูปภาพ, ภาพนิ่ง',
-      description: 'เริ่มต้นที่โพสต์ละ 500 บาท เพิ่มช่องทางในการโพสต์ช่องละ 200 บาท ช่องทางการโปรโมทคือ Facebook, Tiktok และ Youtube',
-      price: 'เริ่มต้น 500.-',
-      icon: '📸'
-    },
-    {
-      id: 2,
-      title: 'คลิปสั้นไม่เกิน 1นาที',
-      description: 'เริ่มต้นที่โพสต์ละ 2,500 บาท เพิ่มช่องทางในการโพสต์ช่องทางละ 500 บาท ช่องทางการโปรโมทคือ Facebook, Tiktok และ Youtube หากต้องการซื้อเนื้อหาไม่ใช้ทางการค้าเพิ่มที่ 1,500 บาท (Gen codeฟรี)',
-      price: 'เริ่มต้น 2,500.-',
-      icon: '🎬'
-    },
-    {
-      id: 3,
-      title: 'ค่าเดินทาง (ถ้ามี)',
-      description: 'ในกรณีนี้ต้องมีการถ่ายทำในสถานที่ที่จัดเตรียมไว้ จะค่าใช้จ่ายทางเพิ่มเติม500บาทในกรุงเทพและปริมณฑล ส่วนต่างจังหวัดขึ้นอยู่กับระยะทาง',
-      price: 'เริ่มต้น 500.-',
-      icon: '📹'
-    }
-  ];
+  const { data, loading, error } = useAppSelector((state) => state.followers);
+  const [packages, setPackages] = useState<Package[]>([]);
+  const [packagesLoading, setPackagesLoading] = useState(true);
+  const [packagesError, setPackagesError] = useState<string | null>(null);
+ 
+  type Package = {
+    id: string;
+    title: string;
+    description: string;
+    price: number;
+    icon: string;
+  };
+
+  useEffect(() => {
+    setPackagesLoading(true);
+    fetch("/api/packages")
+      .then(res => res.json())
+      .then(data => {
+        setPackages(data);
+        setPackagesLoading(false);
+      })
+      .catch(err => {
+        console.error(err);
+        setPackagesError('ไม่สามารถโหลดข้อมูลแพ็คเกจได้');
+        setPackagesLoading(false);
+      });
+  }, []);
+ 
 
   const getSocialIcon = (platform: string) => {
     switch (platform) {
@@ -51,48 +59,146 @@ export default function RateCard() {
     }
   };
 
-  const socialLinks = [
-    { 
-      platform: 'facebook', 
-      label: 'DUKDIK_ดุ๊กดิ๊ก(4.2หมื่นผู้ติดตาม)', 
-      color: 'from-blue-500 to-blue-600'
-    },
-    { 
-      platform: 'tiktok', 
-      label: 'REAL_DUKDIK(4.1หมื่นผู้ติดตาม)', 
-      color: 'from-gray-800 to-black'
-    },
-    { 
-      platform: 'youtube', 
-      label: 'DUKDIK_ดุ๊กดิ๊ก(4.1หมื่นผู้ติดตาม)', 
-      color: 'from-red-500 to-red-600'
+  // ฟังก์ชันแปลงตัวเลขเป็นคำอ่านภาษาไทย
+  const formatFollowerCount = (count: number): string => {
+    if (count >= 10000) {
+      const tenThousands = Math.floor(count / 10000);
+      const remainder = count % 10000;
+      if (remainder === 0) {
+        return `${tenThousands}หมื่น`;
+      } else {
+        const thousands = Math.floor(remainder / 1000);
+        if (thousands > 0) {
+          return `${tenThousands}.${thousands}หมื่น`;
+        }
+        return `${tenThousands}หมื่น`;
+      }
+    } else if (count >= 1000) {
+      const thousands = Math.floor(count / 1000);
+      const remainder = count % 1000;
+      if (remainder === 0) {
+        return `${thousands}พัน`;
+      } else {
+        const hundreds = Math.floor(remainder / 100);
+        if (hundreds > 0) {
+          return `${thousands}.${hundreds}พัน`;
+        }
+        return `${thousands}พัน`;
+      }
     }
-  ];
+    return `${count}`;
+  };
+
+  // สร้าง socialLinks จาก Redux store
+  const getSocialLinks = () => {
+    const links = [
+      {
+        platform: 'facebook' as const,
+        label: data.facebook 
+          ? `${data.facebook.label}(${formatFollowerCount(data.facebook.count)}ผู้ติดตาม)`
+          : 'DUKDIK_ดุ๊กดิ๊ก(กำลังโหลด...)',
+        color: 'from-blue-500 to-blue-600'
+      },
+      {
+        platform: 'tiktok' as const,
+        label: data.tiktok
+          ? `${data.tiktok.label}(${formatFollowerCount(data.tiktok.count)}ผู้ติดตาม)`
+          : 'REAL_DUKDIK(กำลังโหลด...)',
+        color: 'from-gray-800 to-black'
+      },
+      {
+        platform: 'youtube' as const,
+        label: data.youtube
+          ? `${data.youtube.label}(${formatFollowerCount(data.youtube.count)}ผู้ติดตาม)`
+          : 'DUKDIK_ดุ๊กดิ๊ก(กำลังโหลด...)',
+        color: 'from-red-500 to-red-600'
+      }
+    ];
+    return links;
+  };
+
+  const socialLinks = getSocialLinks();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-slate-50 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-100 to-slate-50 relative overflow-hidden">
       {/* Professional decorative elements */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-slate-100 rounded-full mix-blend-multiply filter blur-3xl opacity-25 animate-pulse delay-1000"></div>
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-50 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+      <div className="absolute top-0 right-0 w-64 h-64 md:w-96 md:h-96 bg-blue-100 rounded-full filter blur-3xl opacity-15 md:opacity-20 animate-pulse"></div>
+      <div className="absolute bottom-0 left-0 w-64 h-64 md:w-96 md:h-96 bg-slate-100 rounded-full filter blur-3xl opacity-10 md:opacity-15 animate-pulse delay-1000"></div>
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 md:w-96 md:h-96 bg-indigo-50 rounded-full filter blur-3xl opacity-10 md:opacity-15"></div>
 
       <div className="relative z-10 container mx-auto px-4 py-6 max-w-6xl">
         {/* Header */}
         <header className="text-center mb-6">
+         {/* Logo */}
+         <div className="flex justify-center mb-4">
+            <div className="relative">
+              <div className="absolute inset-0 bg-blue-100 rounded-full blur-xl opacity-30 animate-pulse"></div>
+              <div className="relative w-44 h-44 rounded-full overflow-hidden shadow-lg border-4 border-white transform hover:scale-110 transition-transform">
+                <img 
+                  src="/DukDik_logo.jpeg" 
+                  alt="DUKDIK Logo" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+          </div>
           <div className="inline-flex items-center gap-2 bg-blue-800 text-white px-6 py-2 rounded-full shadow-md mb-4 transform hover:scale-105 transition-transform">
             <span className="font-semibold text-sm tracking-wide">DUKDIKดุ๊กดิ๊ก</span>
           </div>
+      
           <h1 className="text-5xl md:text-6xl font-bold text-blue-900 mb-2">
             Rate Card
           </h1>
-          <div className="flex items-center justify-center gap-1">
-            
-          </div>
         </header>
 
-        {/* Packages Grid */}
-        <div className="grid md:grid-cols-3 gap-4 mb-6">
-          {packages.map((pkg, index) => (
+         {/* Packages Grid */}
+         <div className="grid md:grid-cols-3 gap-4 mb-6">
+          {/* Loading State */}
+          {packagesLoading && (
+            <>
+              {[1, 2, 3].map((i) => (
+                <div
+                  key={i}
+                  className="bg-white rounded-xl p-5 shadow-sm border border-gray-200 relative overflow-hidden animate-pulse"
+                >
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-gray-100 rounded-bl-full"></div>
+                  <div className="absolute -top-3 -right-3 bg-gray-200 w-12 h-12 rounded-full"></div>
+                  
+                  <div className="mb-3">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-6 h-6 bg-gray-200 rounded"></div>
+                      <div className="h-5 bg-gray-200 rounded w-3/4"></div>
+                    </div>
+                    <div className="space-y-2 mt-3">
+                      <div className="h-3 bg-gray-200 rounded w-full"></div>
+                      <div className="h-3 bg-gray-200 rounded w-5/6"></div>
+                      <div className="h-3 bg-gray-200 rounded w-4/6"></div>
+                    </div>
+                  </div>
+
+                  <div className="mt-8">
+                    <div className="h-10 bg-gray-200 rounded-lg"></div>
+                  </div>
+                </div>
+              ))}
+            </>
+          )}
+
+          {/* Error State */}
+          {packagesError && !packagesLoading && (
+            <div className="col-span-full bg-red-50 border border-red-200 rounded-xl p-6 text-center">
+              <p className="text-red-600 font-medium">{packagesError}</p>
+              <button 
+                onClick={() => window.location.reload()}
+                className="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm"
+              >
+                ลองใหม่อีกครั้ง
+              </button>
+            </div>
+          )}
+
+          {/* Packages Content */}
+          {!packagesLoading && !packagesError && packages.map((pkg, index) => (
             <div
               key={pkg.id}
               className="bg-white rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-2 border border-gray-200 hover:border-blue-300 relative overflow-hidden group flex flex-col h-full"
@@ -109,7 +215,7 @@ export default function RateCard() {
               <div className="mb-3 flex-grow">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-xl font-bold text-blue-800">
-                    {pkg.id}.
+                    {index+1}.
                   </span>
                   <h2 className="text-lg font-semibold text-gray-800 leading-tight">{pkg.title}</h2>
                 </div>
@@ -129,21 +235,23 @@ export default function RateCard() {
 
         {/* Footer with Social Links */}
         <footer className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-          <div className="flex flex-col md:flex-row items-center gap-6">
-            {/* Logo */}
-            <div className="flex-shrink-0 relative">
-              <div className="absolute inset-0 bg-blue-100 rounded-full blur-xl opacity-30 animate-pulse"></div>
-              <div className="relative w-32 h-32 rounded-full overflow-hidden shadow-lg border-4 border-white transform hover:scale-110 transition-transform">
-                <img 
-                  src="/DukDik_logo.jpeg"  
-                  alt="DUKDIK Logo" 
-                  className="w-full h-full object-cover"
-                />
+          <div className="flex flex-col items-center gap-4">
+            {/* Loading indicator */}
+            {loading && (
+              <div className="text-sm text-gray-500 mb-2">
+                กำลังโหลดข้อมูลผู้ติดตาม...
               </div>
-            </div>
+            )}
+            
+            {/* Error message */}
+            {error && (
+              <div className="text-sm text-red-500 mb-2">
+                เกิดข้อผิดพลาด: {error}
+              </div>
+            )}
 
             {/* Social Links */}
-            <div className="flex-1 w-full space-y-3">
+            <div className="w-full space-y-3">
               {socialLinks.map((social, index) => (
                 <a
                   key={index}
