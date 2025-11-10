@@ -72,9 +72,9 @@ export default function RateCard() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-slate-50 relative overflow-hidden">
       {/* Professional decorative elements */}
-      <div className="absolute top-0 right-0 w-64 h-64 md:w-96 md:h-96 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 md:opacity-30 animate-pulse"></div>
-      <div className="absolute bottom-0 left-0 w-64 h-64 md:w-96 md:h-96 bg-slate-100 rounded-full mix-blend-multiply filter blur-3xl opacity-15 md:opacity-25 animate-pulse delay-1000"></div>
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 md:w-96 md:h-96 bg-indigo-50 rounded-full mix-blend-multiply filter blur-3xl opacity-10 md:opacity-20"></div>
+      <div className="absolute top-0 right-0 w-64 h-64 md:w-96 md:h-96 bg-blue-100 rounded-full filter blur-3xl opacity-15 md:opacity-20 animate-pulse"></div>
+      <div className="absolute bottom-0 left-0 w-64 h-64 md:w-96 md:h-96 bg-slate-100 rounded-full filter blur-3xl opacity-10 md:opacity-15 animate-pulse delay-1000"></div>
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 md:w-96 md:h-96 bg-indigo-50 rounded-full filter blur-3xl opacity-10 md:opacity-15"></div>
 
       <div className="relative z-10 container mx-auto px-4 py-6 max-w-6xl">
         {/* Header */}
@@ -85,7 +85,7 @@ export default function RateCard() {
               <div className="absolute inset-0 bg-blue-100 rounded-full blur-xl opacity-30 animate-pulse"></div>
               <div className="relative w-44 h-44 rounded-full overflow-hidden shadow-lg border-4 border-white transform hover:scale-110 transition-transform">
                 <img 
-                  src="https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/d6d4622f5a23c0172467f388b42f8bab~tplv-tiktokx-cropcenter:1080:1080.jpeg?dr=14579&refresh_token=b5dc66bd&x-expires=1762660800&x-signature=iQcLlasy9L%2F%2F9NTgdKmRu0jv8ok%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=my" 
+                  src="/DukDik_logo.jpeg" 
                   alt="DUKDIK Logo" 
                   className="w-full h-full object-cover"
                 />

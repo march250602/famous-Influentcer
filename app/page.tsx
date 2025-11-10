@@ -135,7 +135,7 @@ export default function RateCard() {
               <div className="absolute inset-0 bg-blue-100 rounded-full blur-xl opacity-30 animate-pulse"></div>
               <div className="relative w-32 h-32 rounded-full overflow-hidden shadow-lg border-4 border-white transform hover:scale-110 transition-transform">
                 <img 
-                  src="https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/d6d4622f5a23c0172467f388b42f8bab~tplv-tiktokx-cropcenter:1080:1080.jpeg?dr=14579&refresh_token=b5dc66bd&x-expires=1762660800&x-signature=iQcLlasy9L%2F%2F9NTgdKmRu0jv8ok%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=my" 
+                  src="/DukDik_logo.jpeg"  
                   alt="DUKDIK Logo" 
                   className="w-full h-full object-cover"
                 />
