@@ -351,7 +351,7 @@ export default function AdminDashboard() {
               )}
 
               <div className="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-lg text-sm">
-                <strong>Demo:</strong> username: <code className="bg-blue-100 px-2 py-0.5 rounded">admin</code> | password: <code className="bg-blue-100 px-2 py-0.5 rounded">admin123</code>
+                <strong>Demo:</strong> username: <code className="bg-blue-100 px-2 py-0.5 rounded">GGWP</code> | password: <code className="bg-blue-100 px-2 py-0.5 rounded">XDDD</code>
               </div>
 
               <button
