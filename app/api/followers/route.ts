@@ -1,5 +1,9 @@
 import { NextResponse } from 'next/server';
-
+import { db } from "@/lib/firebaseConfig";
+import {
+  doc,
+  updateDoc, 
+} from "firebase/firestore";
 interface FollowerResponse {
   platform: 'youtube' | 'facebook' | 'tiktok';
   count: number;
@@ -78,8 +82,30 @@ followersData.push({
       lastUpdated: new Date().toISOString(),
     });
 
-    // TikTok - ยังใช้ข้อมูลตัวอย่าง (สามารถเพิ่ม API จริงได้ในอนาคต)
-    
+    const ids = {
+  facebook: "HkPBLwq97x3szY7et4yp",
+  youtube: "udhdj6ujNemifJe7Cv1Q",
+  tiktok: "KnGYyikOHmYRbMLRExFl",
+};
+
+// สร้าง object สำหรับ follower counts
+const counts = Object.fromEntries(
+  followersData.map(item => [item.platform, item.count])
+);
+
+// สร้าง object สำหรับ fetch date
+const latest_date = Object.fromEntries(
+  followersData.map(item => [item.platform, item.lastUpdated])
+);
+
+// อัพเดททุก doc ด้วย loop
+for (const platform of ["facebook", "youtube", "tiktok"] as const) {
+  const docRef = doc(db, "social_links", ids[platform]);
+  await updateDoc(docRef, {
+    follower_count: counts[platform],     
+    fetch_date: latest_date[platform]
+  });
+}
 
 
     

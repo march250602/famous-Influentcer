@@ -277,7 +277,7 @@ export default function RateCard() {
             )}
 
             {/* Social Links */}
-            <div className="w-full space-y-3">
+             <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-3">{/* <div className="w-full space-y-3"> */}
               {socialLinks.map((social, index) => (
                 <a
                   key={index}

@@ -16,6 +16,8 @@ export async function GET() {
         social_media: data.social_media,
         chanel_name: data.chanel_name,
         link: data.link,
+        fetch_date: data.fetch_date,
+        follower_count: data.follower_count
       };
     });
     return NextResponse.json(packages);
