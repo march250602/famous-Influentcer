@@ -235,8 +235,7 @@ export default function RateCard() {
               { top: 30, left: 80, icon: '✨', color: 'text-cyan-300' },
               { top: 50, left: 15, icon: '💫', color: 'text-blue-300' },
               { top: 70, left: 85, icon: '🌟', color: 'text-white' },
-              { top: 20, left: 60, icon: '⚡', color: 'text-yellow-200' },
-              { top: 80, left: 40, icon: '💙', color: 'text-blue-200' },
+              { top: 75, left: 75, icon: '💙', color: 'text-blue-200' },
               { top: 40, left: 90, icon: '✨', color: 'text-cyan-200' },
               { top: 60, left: 25, icon: '⭐', color: 'text-white' }
             ].map((item, i) => (
@@ -264,10 +263,27 @@ export default function RateCard() {
         }`}
       >
         {/* Floating anime elements */}
+        
+<div className="absolute top-60 left-20 w-12 h-12 animate-float-slow opacity-20">
+  <img
+    src="/anime-away-face-svgrepo-com.svg"
+    alt="Anime Away Face"
+    className="w-full h-full object-contain text-blue-500"
+  />
+</div>
         <div className="absolute top-10 left-10 text-4xl animate-float-slow opacity-20">🎌</div>
-        <div className="absolute top-20 right-20 text-3xl animate-float-slow opacity-20" style={{ animationDelay: '1s' }}>⭐</div>
+        <div
+  className="absolute top-20 right-20 text-3xl animate-float-slow opacity-20"
+  style={{ animationDelay: '1s' }}
+>
+  <img
+    src="/gundam.png"
+    alt="Anime"
+    className="w-18 h-18 object-contain animate-spin-slow" // <-- ลดขนาดที่นี่
+  />
+</div>
         <div className="absolute bottom-20 left-20 text-3xl animate-float-slow opacity-20" style={{ animationDelay: '2s' }}>💫</div>
-        <div className="absolute bottom-32 right-32 text-4xl animate-float-slow opacity-20" style={{ animationDelay: '0.5s' }}>✨</div>
+        <div className="absolute bottom-32 right-32 text-4xl animate-float-slow opacity-20" style={{ animationDelay: '0.5s' }}>🎌</div>
         
         {/* Professional decorative elements */}
         <div className="absolute top-0 right-0 w-64 h-64 md:w-96 md:h-96 bg-blue-100 rounded-full filter blur-3xl opacity-15 md:opacity-20 animate-pulse"></div>
@@ -310,7 +326,7 @@ export default function RateCard() {
   <div className="w-20 h-1 bg-gradient-to-r from-transparent to-blue-400 rounded animate-expand"></div>
   <div className="w-8 h-8 flex items-center justify-center">
     <img 
-      src="/naruto.svg" 
+      src="/pokeball.png" 
       alt="Anime" 
       className="w-full h-full object-contain animate-spin-slow"
     />
@@ -376,7 +392,7 @@ export default function RateCard() {
                 <div className="absolute top-0 right-0 w-full h-full opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                   <div className="absolute top-2 right-2 text-blue-400 animate-ping">✨</div>
                   <div className="absolute top-5 right-8 text-cyan-400 animate-ping" style={{ animationDelay: '0.2s' }}>⭐</div>
-                  <div className="absolute top-8 right-4 text-blue-500 animate-ping" style={{ animationDelay: '0.4s' }}>💫</div>
+                  <div className="absolute top-8 right-4 text-blue-500 animate-ping" style={{ animationDelay: '0.6s' }}>🌟</div>
                 </div>
                 
                 {/* Decorative corner */}
