@@ -37,9 +37,18 @@ export async function PATCH(req: NextRequest) {
         // อัปเดตแต่ละ document
         const updatePromises = social_media.map(item => {
           const docRef = doc(db, "social_links", item.id);
+          if (item.social_media == "facebook"){
+            return updateDoc(docRef, {
+              chanel_name: item.chanel_name,
+              link: item.link,
+              follower_count : item.follower_count
+            });
+
+          }
           return updateDoc(docRef, {
             chanel_name: item.chanel_name,
-            link: item.link
+            link: item.link,
+  
           });
         });
     

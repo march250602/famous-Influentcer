@@ -11,6 +11,7 @@ interface Package {
   description: string;
   price: string;
   icon: string;
+  follower?: string;
 }
 
 interface SocialMedia {
@@ -18,6 +19,7 @@ interface SocialMedia {
   social_media: string;
   chanel_name: string;
   link: string;
+  follower_count: number;
 }
 
 interface Followers {
@@ -109,6 +111,7 @@ export default function AdminDashboard() {
           social_media: sm.social_media,
           chanel_name: sm.chanel_name,
           link: sm.link,
+           follower_count: sm.follower_count || ''
         }));
         setsocial_media(formatted);
       })
@@ -212,6 +215,7 @@ export default function AdminDashboard() {
   };
 
 
+
   const handleDeletePackage = (id: string): void => {
     setDeleteConfirmPackageId(id);
   };
@@ -275,14 +279,15 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleinfoChange = (id:string, chanel_name:string, link:string): void => {
+  const handleinfoChange = (id:string, chanel_name:string, link:string,follower_count:number): void => {
     setsocial_media(prev =>
       prev.map(item =>
         item.id === id
           ? { 
               ...item, 
               chanel_name,
-              link
+              link,
+              follower_count
             }
           : item
       )
@@ -540,14 +545,19 @@ export default function AdminDashboard() {
             <div className="grid md:grid-cols-3 gap-4">
               {social_media.map((item) =>  (
                 <div key={item.social_media} className="border border-gray-200 rounded-lg p-4">
-                  <div className="font-semibold text-gray-700 mb-3 capitalize">{item.social_media}</div>
+                  <div className="font-semibold text-gray-700 mb-3 capitalize flex items-center gap-2">
+                    {item.social_media === 'facebook' && '📘'}
+                    {item.social_media === 'tiktok' && '🎵'}
+                    {item.social_media === 'youtube' && '📺'}
+                    {item.social_media}
+                  </div>
                   <div className="space-y-3">
                     <div>
                       <label className="text-sm text-gray-600 block mb-1">ชื่อช่อง</label>
                       <input
                         type="text"
                         value={item.chanel_name}
-                        onChange={(e) => handleinfoChange(item.id, e.target.value,item.link )}
+                        onChange={(e) => handleinfoChange(item.id, e.target.value, item.link, item.follower_count )}
                         disabled={!editingFollowers}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg disabled:bg-gray-50 disabled:text-gray-500"
                       />
@@ -557,11 +567,24 @@ export default function AdminDashboard() {
                       <input
                         type="text"
                         value={item.link}
-                        onChange={(e) => handleinfoChange(item.id, item.chanel_name,e.target.value)}
+                        onChange={(e) => handleinfoChange(item.id, item.chanel_name, e.target.value, item.follower_count )}
                         disabled={!editingFollowers}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg disabled:bg-gray-50 disabled:text-gray-500"
                       />
                     </div>
+                    {item.social_media === 'facebook' && (
+                      <div>
+                        <label className="text-sm text-gray-600 block mb-1">จำนวนผู้ติดตาม</label>
+                        <input
+                          type="number"
+                          value={item.follower_count || ''}
+                          onChange={(e) => handleinfoChange(item.id, item.chanel_name, item.link,  Number(e.target.value))}
+                          disabled={!editingFollowers}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg disabled:bg-gray-50 disabled:text-gray-500"
+  
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}

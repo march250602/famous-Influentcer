@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from "@/lib/firebaseConfig";
+import axios from "axios";
 import {
   doc,
   updateDoc, 
@@ -74,11 +75,13 @@ followersData.push({
       console.error('Error fetching YouTube data:', error);
     }
 
-    // Facebook - ยังใช้ข้อมูลตัวอย่าง (สามารถเพิ่ม API จริงได้ในอนาคต)
+    // Facebook - 
+    const response=await axios.post('/api/social_media')
+    const { follower_count, chanel_name } = response.data;
     followersData.push({
       platform: 'facebook',
-      count: 42000,
-      label: 'DUKDIK_ดุ๊กดิ๊ก',
+      count: follower_count,
+      label: chanel_name,
       lastUpdated: new Date().toISOString(),
     });
 
