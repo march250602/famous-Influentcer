@@ -49,7 +49,8 @@ export default function AdminDashboard() {
   const [modalMessage, setModalMessage] = useState<string>('');
   const [user, setUser] = useState<any>(null);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
-
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [deleteConfirmPackageId, setDeleteConfirmPackageId] = useState<string|null>(null);
 
   useEffect(() => {
     checkAuth();
@@ -97,7 +98,7 @@ export default function AdminDashboard() {
         setPackages(formatted);
       })
       .finally(() => setLoading(false));
-  }, []);
+  }, [refreshKey]);
 
   useEffect(() => {
     fetch("/api/social_media")
@@ -114,6 +115,8 @@ export default function AdminDashboard() {
       .finally(() => setLoading(false));
   }, []);
 
+
+  
   // Login handler
   const handleLogin = async () => {
     setIsLoggingIn(true);
@@ -196,6 +199,7 @@ export default function AdminDashboard() {
       setModalMessage('บันทึกข้อมูลแพ็คเกจสำเร็จ!');
       setShowModal(true);
       setEditingPackage(null);
+      setRefreshKey(prev => prev + 1);
     } catch (error: any) {
       console.error('Failed to update:', error.response?.data || error.message);
       
@@ -208,29 +212,43 @@ export default function AdminDashboard() {
   };
 
 
-
-
-
-
-
-
   const handleDeletePackage = (id: string): void => {
-    if (confirm('คุณต้องการลบแพ็คเกจนี้หรือไม่?')) {
-      setPackages(packages.filter(pkg => pkg.id !== id));
+    setDeleteConfirmPackageId(id);
+  };
+
+  const handleDeletePackageConfirmed = async () => {
+    if (!deleteConfirmPackageId) return;
+    try {
+      await axios.delete('/api/packages', { data: { id: deleteConfirmPackageId } });
+      setPackages(packages.filter(pkg => pkg.id !== deleteConfirmPackageId));
+      setModalType('success');
+      setModalMessage('ลบแพ็คเกจสำเร็จ!');
+      setShowModal(true);
+      setRefreshKey(prev => prev + 1);
+    } catch (error: any) {
+      setModalType('error');
+      setModalMessage(error.response?.data?.error || 'เกิดข้อผิดพลาดในการลบแพ็คเกจ');
+      setShowModal(true);
+    } finally {
+      setDeleteConfirmPackageId(null);
     }
   };
 
   const handleAddPackage = (): void => {
     const newId = (Math.max(...packages.map(p => parseInt(p.id))) + 1).toString();
-    const newPackage: Package = {
-      id: newId,
+    const newPackage = {
+     
       title: 'New Package',
       description: 'Description here',
       price: '0 บาท',
       icon: '📦'
     };
-    setPackages([...packages, newPackage]);
-    setEditingPackage(newPackage);
+    const newPackageWithId = {
+      ...newPackage,   // copy ทุก field ของ newPackage
+      id: newId        // เพิ่ม field id
+    };
+    setPackages([...packages, newPackageWithId]);
+    setEditingPackage(newPackageWithId);
   };
 
   // Followers handlers
@@ -425,6 +443,48 @@ export default function AdminDashboard() {
         </div>
       )}
 
+      {/* Modal Confirm Delete */}
+      {deleteConfirmPackageId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 relative">
+            <button
+              onClick={() => setDeleteConfirmPackageId(null)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+              type="button"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <div className="flex flex-col items-center text-center">
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4 bg-red-100">
+                <Trash2 className="w-10 h-10 text-red-600" />
+              </div>
+              <h3 className="text-xl font-bold text-red-800 mb-2">
+                คุณต้องการลบแพ็คเกจนี้หรือไม่?
+              </h3>
+              <p className="text-gray-600 mb-6">
+                การลบแพ็คเกจจะไม่สามารถย้อนคืนได้
+              </p>
+              <div className="flex gap-3 w-full">
+                <button
+                  onClick={() => setDeleteConfirmPackageId(null)}
+                  className="flex-1 px-4 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-semibold"
+                  type="button"
+                >
+                  ยกเลิก
+                </button>
+                <button
+                  onClick={handleDeletePackageConfirmed}
+                  className="flex-1 px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 font-semibold"
+                  type="button"
+                >
+                  ลบ
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
         <div className="container mx-auto px-4 py-4">
@@ -518,7 +578,7 @@ export default function AdminDashboard() {
                 onClick={handleAddPackage}
                 className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                 type="button"
-                disabled={true}
+                disabled={!!editingPackage}
               >
                 <Plus className="w-4 h-4" />
                 เพิ่มแพ็คเกจ

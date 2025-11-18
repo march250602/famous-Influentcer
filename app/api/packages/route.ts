@@ -4,6 +4,9 @@ import { db } from "@/lib/firebaseConfig";
 import {
   doc,
   updateDoc, 
+  setDoc,
+  addDoc,
+  deleteDoc // เพิ่ม deleteDoc
 } from "firebase/firestore";
 
 export async function GET() {
@@ -28,10 +31,29 @@ export async function GET() {
 export async function PATCH(req: NextRequest) {
   try {
     const { id, data } = await req.json(); 
+    if (!id || id === 'NaN') {
+      // ใช้ addDoc กรณี id ไม่ valid (auto gen)
+      const docRef = await addDoc(collection(db, "Pakage_influencer"), data);
+      return NextResponse.json({ success: true, id: docRef.id });
+    }
     const docRef = doc(db, "Pakage_influencer", id);
-    await updateDoc(docRef, data);
-    return NextResponse.json({ success: true });
+    await updateDoc(docRef, data); // ใช้ setDoc สำหรับ id ปกติ
+    return NextResponse.json({ success: true, id });
   } catch (err) {
     return NextResponse.json({ error: "Cannot update package" }, { status: 500 });
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const { id } = await req.json();
+    if (!id) {
+      return NextResponse.json({ error: 'Missing id field' }, { status: 400 });
+    }
+    await deleteDoc(doc(db, "Pakage_influencer", id));
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    return NextResponse.json({ error: 'Cannot delete package' }, { status: 500 });
+  }
+}
+
