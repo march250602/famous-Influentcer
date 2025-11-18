@@ -28,6 +28,7 @@ export default function RateCard() {
     social_media: string;
     chanel_name: string;
     link: string;
+    follower_count: number;
   }
 
   // Anime Loading Animation
@@ -130,7 +131,7 @@ export default function RateCard() {
       {
         platform: 'facebook' as const,
         label: Facebook?.chanel_name && data.facebook?.count
-          ? `${Facebook.chanel_name}(${formatFollowerCount(data.facebook.count)}ผู้ติดตาม)`
+          ? `${Facebook.chanel_name}(${formatFollowerCount(Facebook.follower_count)}ผู้ติดตาม)`
           : 'DUKDIK_ดุ๊กดิ๊ก(กำลังโหลด...)',
         color: 'from-blue-500 to-blue-600',
         link: Facebook?.link
