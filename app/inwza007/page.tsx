@@ -11,7 +11,6 @@ interface Package {
   description: string;
   price: string;
   icon: string;
-  follower?: string;
 }
 
 interface SocialMedia {
@@ -19,7 +18,6 @@ interface SocialMedia {
   social_media: string;
   chanel_name: string;
   link: string;
-  follower_count: number;
 }
 
 interface Followers {
@@ -28,7 +26,15 @@ interface Followers {
   youtube: SocialMedia;
 }
 
-type PlatformKey = keyof Followers;
+
+interface Video {
+  id: string;
+  video_id: string;
+}
+
+
+
+
 
 export default function AdminDashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -53,6 +59,31 @@ export default function AdminDashboard() {
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [refreshKey, setRefreshKey] = useState(0);
   const [deleteConfirmPackageId, setDeleteConfirmPackageId] = useState<string|null>(null);
+
+  const [videos, setVideos] = useState<Video[]>([]);
+const [editingVideos, setEditingVideos] = useState<boolean>(false);
+const [deleteConfirmVideoId, setDeleteConfirmVideoId] = useState<string|null>(null);
+
+
+
+// useEffect โหลดข้อมูล
+useEffect(() => {
+  fetch("/api/video_ids")
+    .then(res => res.json())
+    .then(data => {
+      // data = [{ data: { id_array: [...] } }]
+      const idArray = data[0]?.data?.id_array || [];
+
+      const formatted: Video[] = idArray.map((id: string, index: number) => ({
+        id: (index + 1).toString(),
+        video_id: id
+      }));
+
+      setVideos(formatted);
+    })
+    .catch(err => console.error(err));
+}, [refreshKey]);
+
 
   useEffect(() => {
     checkAuth();
@@ -111,7 +142,6 @@ export default function AdminDashboard() {
           social_media: sm.social_media,
           chanel_name: sm.chanel_name,
           link: sm.link,
-           follower_count: sm.follower_count || ''
         }));
         setsocial_media(formatted);
       })
@@ -119,7 +149,7 @@ export default function AdminDashboard() {
   }, []);
 
 
-  
+
   // Login handler
   const handleLogin = async () => {
     setIsLoggingIn(true);
@@ -176,6 +206,34 @@ export default function AdminDashboard() {
     }
   };
 
+  
+
+  // Showcase_video Handlers
+
+
+
+
+const handleSaveVideos = async (): Promise<void> => {
+  try {
+    const response = await axios.post('/api/video_ids', { videos });
+    console.log('Update success:', response.data);
+    setEditingVideos(false);
+    setModalType('success');
+    setModalMessage('บันทึกข้อมูลวิดีโอสำเร็จ!');
+    setShowModal(true);
+    setRefreshKey(prev => prev + 1);
+  } catch (error: any) {
+    console.error('Failed to update:', error.response?.data || error.message);
+    setModalType('error');
+    setModalMessage(error.response?.data?.error || 'เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+    setShowModal(true);
+  }
+};
+
+const handleDeleteVideo = (videoId: string): void => {
+  setVideos(videos.filter(v => v.id !== videoId));
+};
+
  
 
   // Package handlers
@@ -213,7 +271,6 @@ export default function AdminDashboard() {
     }
   };
   };
-
 
 
   const handleDeletePackage = (id: string): void => {
@@ -279,15 +336,14 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleinfoChange = (id:string, chanel_name:string, link:string,follower_count:number): void => {
+  const handleinfoChange = (id:string, chanel_name:string, link:string): void => {
     setsocial_media(prev =>
       prev.map(item =>
         item.id === id
           ? { 
               ...item, 
               chanel_name,
-              link,
-              follower_count
+              link
             }
           : item
       )
@@ -545,19 +601,14 @@ export default function AdminDashboard() {
             <div className="grid md:grid-cols-3 gap-4">
               {social_media.map((item) =>  (
                 <div key={item.social_media} className="border border-gray-200 rounded-lg p-4">
-                  <div className="font-semibold text-gray-700 mb-3 capitalize flex items-center gap-2">
-                    {item.social_media === 'facebook' && '📘'}
-                    {item.social_media === 'tiktok' && '🎵'}
-                    {item.social_media === 'youtube' && '📺'}
-                    {item.social_media}
-                  </div>
+                  <div className="font-semibold text-gray-700 mb-3 capitalize">{item.social_media}</div>
                   <div className="space-y-3">
                     <div>
                       <label className="text-sm text-gray-600 block mb-1">ชื่อช่อง</label>
                       <input
                         type="text"
                         value={item.chanel_name}
-                        onChange={(e) => handleinfoChange(item.id, e.target.value, item.link, item.follower_count )}
+                        onChange={(e) => handleinfoChange(item.id, e.target.value,item.link )}
                         disabled={!editingFollowers}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg disabled:bg-gray-50 disabled:text-gray-500"
                       />
@@ -567,30 +618,100 @@ export default function AdminDashboard() {
                       <input
                         type="text"
                         value={item.link}
-                        onChange={(e) => handleinfoChange(item.id, item.chanel_name, e.target.value, item.follower_count )}
+                        onChange={(e) => handleinfoChange(item.id, item.chanel_name,e.target.value)}
                         disabled={!editingFollowers}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg disabled:bg-gray-50 disabled:text-gray-500"
                       />
                     </div>
-                    {item.social_media === 'facebook' && (
-                      <div>
-                        <label className="text-sm text-gray-600 block mb-1">จำนวนผู้ติดตาม</label>
-                        <input
-                          type="number"
-                          value={item.follower_count || ''}
-                          onChange={(e) => handleinfoChange(item.id, item.chanel_name, item.link,  Number(e.target.value))}
-                          disabled={!editingFollowers}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg disabled:bg-gray-50 disabled:text-gray-500"
-  
-                        />
-                      </div>
-                    )}
                   </div>
                 </div>
               ))}
             </div>
           </div>
         </section>
+
+        {/* Videos Section */}
+<section className="mb-8">
+  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <div className="flex items-center justify-between mb-6">
+      <div>
+        <h2 className="text-2xl font-bold text-gray-800 mb-1">YouTube Video IDs</h2>
+        <p className="text-sm text-gray-500">กดเพื่อลบหรือกด enter เพื่อเพิ่ม Video ID ใหม่</p>
+      </div>
+    </div>
+
+    {/* Input Field */}
+              <div className="mb-4">
+                <input
+                  type="text"
+                  placeholder="ใส่รหัส วิดิโอ เพื่อโชว์ตึง และ กด Enter เพื่อเพิ่มรหัส"
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      const input = e.currentTarget;
+                      const videoId = input.value.trim();
+                      if (videoId && !videos.find(v => v.id === videoId)) {
+                        setVideos([...videos, { id: (Math.max(...videos.map(v => parseInt(v.id)), 0) + 1).toString(), video_id: videoId }]);
+
+                        input.value = '';
+                      }
+                    }
+                  }}
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                />
+                <p className="text-xs text-gray-500 mt-2">กดปุ่ม Enter เพื่อเพิ่ม Video ID</p>
+              </div>
+
+              {/* Tags Display */}
+              <div className="border-2 border-gray-200 rounded-lg p-4 min-h-[120px]">
+                <h3 className="text-sm font-semibold text-gray-700 mb-3">ทักษะที่เพิ่มไปแล้ว</h3>
+                
+                {videos.length === 0 ? (
+                  <div className="text-center py-8 text-gray-400">
+                    ยังไม่มี Video ID
+                  </div>
+                ) : (
+                  <div className="flex flex-wrap gap-2">
+                    {videos.map((video) => (
+                      <div
+                        key={video.id}
+                        className="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-full transition-colors group"
+                      >
+                        <span className="text-sm font-medium">{video.video_id}</span>
+                        <button
+                          onClick={() => handleDeleteVideo(video.id)}
+                          className="text-gray-500 hover:text-red-600 transition-colors"
+                          type="button"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-3 mt-4">
+                <button
+                  onClick={handleSaveVideos}
+                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                  type="button"
+                >
+                  บันทึก
+                </button>
+                <button
+                  onClick={() => {
+                    // Reset หรือยกเลิก
+                    setRefreshKey(prev => prev + 1);
+                  }}
+                  className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                  type="button"
+                >
+                  ยกเลิก
+                </button>
+              </div>
+            </div>
+          </section>
 
         {/* Packages Section */}
         <section>

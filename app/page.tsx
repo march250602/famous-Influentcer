@@ -125,12 +125,12 @@ export default function RateCard() {
         setYoutube(data[2])
       })
   }, []);
-
+  console.log(Facebook?.follower_count);
   const getSocialLinks = () => {
     const links = [
       {
         platform: 'facebook' as const,
-        label: Facebook?.chanel_name && data.facebook?.count
+        label: Facebook?.chanel_name && Facebook.follower_count
           ? `${Facebook.chanel_name}(${formatFollowerCount(Facebook.follower_count)}ผู้ติดตาม)`
           : 'DUKDIK_ดุ๊กดิ๊ก(กำลังโหลด...)',
         color: 'from-blue-500 to-blue-600',

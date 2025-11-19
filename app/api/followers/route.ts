@@ -76,17 +76,17 @@ followersData.push({
     }
 
     // Facebook - 
-    const response=await axios.post('/api/social_media')
-    const { follower_count, chanel_name } = response.data;
-    followersData.push({
-      platform: 'facebook',
-      count: follower_count,
-      label: chanel_name,
-      lastUpdated: new Date().toISOString(),
-    });
+    // const response=await axios.post('/api/social_media')
+    // const { follower_count, chanel_name } = response.data;
+    // followersData.push({
+    //   platform: 'facebook',
+    //   count: follower_count,
+    //   label: chanel_name,
+    //   lastUpdated: new Date().toISOString(),
+    // });
 
     const ids = {
-  facebook: "HkPBLwq97x3szY7et4yp",
+  // facebook: "HkPBLwq97x3szY7et4yp",
   youtube: "udhdj6ujNemifJe7Cv1Q",
   tiktok: "KnGYyikOHmYRbMLRExFl",
 };
@@ -102,7 +102,7 @@ const latest_date = Object.fromEntries(
 );
 
 // อัพเดททุก doc ด้วย loop
-for (const platform of ["facebook", "youtube", "tiktok"] as const) {
+for (const platform of [ "youtube", "tiktok"] as const) {
   const docRef = doc(db, "social_links", ids[platform]);
   await updateDoc(docRef, {
     follower_count: counts[platform],     
