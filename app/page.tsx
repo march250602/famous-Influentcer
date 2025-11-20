@@ -125,7 +125,7 @@ export default function RateCard() {
         setYoutube(data[2])
       })
   }, []);
-  console.log(Facebook?.follower_count);
+  
   const getSocialLinks = () => {
     const links = [
       {

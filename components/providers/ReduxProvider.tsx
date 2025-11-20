@@ -64,10 +64,10 @@ export default function ReduxProvider({ children }: { children: React.ReactNode 
 
   // เช็คแต่ละ platform
   // ตัวอย่างใช้ Facebook
-  const fbData = firestoreData.facebook;
+  const ytData = firestoreData.youtube;
 
-  if (fbData) {
-    const fetch_date = fbData.fetch_date.split('T')[0];
+  if (ytData) {
+    const fetch_date = ytData.fetch_date.split('T')[0];
 
     if (fetch_date === today && localCache.lastFetchedDate === today) {
       // 1. fetch_date และ localStorage วันนี้ตรงกัน
@@ -77,6 +77,7 @@ export default function ReduxProvider({ children }: { children: React.ReactNode 
           lastFetchedDate: localCache.lastFetchedDate,
         })
       );
+      console.log("ไม่แก้อะไร");
     } else if (fetch_date === today && localCache.lastFetchedDate !== today) {
       // 2. fetch_date วันนี้แต่ localStorage เก่า → update cache
       const dataForStore: {
@@ -108,9 +109,11 @@ export default function ReduxProvider({ children }: { children: React.ReactNode 
         'followersState',
         JSON.stringify({ data: dataForStore, lastFetchedDate: today })
       );
+      console.log("แก้แคช");
     } else {
       // 3. fetch_date ไม่ใช่วันนี้ → ดึง API ใหม่
       store.dispatch(fetchFollowers());
+      console.log("แก้ทุกอย่าง");
     }
   } else {
     // Firestore ไม่มีข้อมูล → ดึง API ใหม่
