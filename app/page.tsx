@@ -411,7 +411,7 @@ export default function RateCard() {
                     </span>
                     <h2 className="text-lg font-semibold text-gray-800 leading-tight">{pkg.title}</h2>
                   </div>
-                  <p className="text-sm text-gray-600 leading-relaxed line-clamp-4 mt-2">
+                  <p className="text-sm text-gray-600 leading-relaxed mt-2">
                     {pkg.description}
                   </p>
                 </div>

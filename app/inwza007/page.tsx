@@ -393,7 +393,7 @@ const handleDeleteVideo = (videoId: string): void => {
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     onKeyPress={handleKeyPress}
-                    className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                     className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-gray-900 bg-white placeholder:text-gray-500"
                     placeholder="admin"
                   />
                 </div>
@@ -410,7 +410,7 @@ const handleDeleteVideo = (videoId: string): void => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     onKeyPress={handleKeyPress}
-                    className="w-full pl-11 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                    className="w-full pl-11 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-gray-900 bg-white placeholder:text-gray-500"
                     placeholder="••••••••"
                   />
                   <button
@@ -656,7 +656,7 @@ const handleDeleteVideo = (videoId: string): void => {
                       }
                     }
                   }}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                 className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-gray-900 bg-white placeholder:text-gray-500"
                 />
                 <p className="text-xs text-gray-500 mt-2">กดปุ่ม Enter เพื่อเพิ่ม Video ID</p>
               </div>
@@ -741,7 +741,7 @@ const handleDeleteVideo = (videoId: string): void => {
                             type="text"
                             value={editingPackage.title}
                             onChange={(e) => setEditingPackage({ ...editingPackage, title: e.target.value })}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
                           />
                         </div>
                         <div>
@@ -750,7 +750,7 @@ const handleDeleteVideo = (videoId: string): void => {
                             type="number"
                             value={editingPackage.price}
                             onChange={(e) => setEditingPackage({ ...editingPackage, price: e.target.value })}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
                           />
                         </div>
                       </div>
@@ -760,7 +760,7 @@ const handleDeleteVideo = (videoId: string): void => {
                           value={editingPackage.description}
                           onChange={(e) => setEditingPackage({ ...editingPackage, description: e.target.value })}
                           rows={3}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
                         />
                       </div>
                       <div>
@@ -769,7 +769,7 @@ const handleDeleteVideo = (videoId: string): void => {
                           type="text"
                           value={editingPackage.icon}
                           onChange={(e) => setEditingPackage({ ...editingPackage, icon: e.target.value })}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
                           placeholder="📱"
                         />
                       </div>
